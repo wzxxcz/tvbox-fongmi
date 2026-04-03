@@ -26,7 +26,9 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Build Leanback ARM64 Debug
-        run: ./gradlew assembleLeanbackArm64_v8aDebug --no-daemon 2>&1 | tail -30
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleLeanbackArm64_v8aDebug --no-daemon 2>&1 | tail -30
 
       - name: Upload Leanback ARM64 APK
         uses: actions/upload-artifact@v4
@@ -55,7 +57,9 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Build Mobile ARM64 Debug
-        run: ./gradlew assembleMobileArm64_v8aDebug --no-daemon 2>&1 | tail -30
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleMobileArm64_v8aDebug --no-daemon 2>&1 | tail -30
 
       - name: Upload Mobile ARM64 APK
         uses: actions/upload-artifact@v4
