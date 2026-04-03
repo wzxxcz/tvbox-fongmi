@@ -1,0 +1,65 @@
+name: Build TV APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master, main, release]
+
+jobs:
+  build-leanback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build Leanback ARM64 Debug
+        run: ./gradlew assembleLeanbackArm64_v8aDebug --no-daemon 2>&1 | tail -30
+
+      - name: Upload Leanback ARM64 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: leanback-arm64-apk
+          path: app/build/outputs/apk/leanback/arm64_v8a/debug/*.apk
+          retention-days: 7
+
+  build-mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build Mobile ARM64 Debug
+        run: ./gradlew assembleMobileArm64_v8aDebug --no-daemon 2>&1 | tail -30
+
+      - name: Upload Mobile ARM64 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-arm64-apk
+          path: app/build/outputs/apk/mobile/arm64_v8a/debug/*.apk
+          retention-days: 7
